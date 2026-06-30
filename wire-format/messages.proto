@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package darkswarm.v1;
+
+// Node identity and capabilities
+message NodeAdvertisement {
+    string peer_id = 1;
+    string model_type = 2;
+    string quantization = 3;         // "q2", "q4", "q8", "fp16"
+    float vram_gb = 4;
+    float ram_gb = 5;
+    string tier = 6;                 // "edge", "consumer", "pro", "server"
+    float current_load = 7;          // 0.0 to 1.0
+    float energy_state = 8;          // 0.0 to 1.0
+    float reputation_score = 9;
+}
+
+// A task to be executed
+message Task {
+    string task_id = 1;
+    string task_type = 2;            // "text_generation", "code_generation", "analysis", "agent_chain", "adversarial_probe"
+    bytes payload = 3;
+    string consensus_tier = 4;       // "fast", "standard", "deep", "debate"
+    int32 max_timeout_ms = 5;
+}
+
+// Task result from a single node
+message TaskResult {
+    string task_id = 1;
+    string node_id = 2;
+    bytes output = 3;
+    float energy_cost = 4;
+    float tokens_per_sec = 5;
+    float confidence = 6;            // 0.0 to 1.0
+}
+
+// Consensus verdict
+message ConsensusVerdict {
+    string task_id = 1;
+    bool agreed = 2;
+    string final_output = 3;
+    float confidence = 4;
+    repeated string participating_nodes = 5;
+    string tier_used = 6;
+}
+
+// Reputation update
+message ReputationUpdate {
+    string target_node = 1;
+    string source_node = 2;
+    float score_delta = 3;           // -1.0 to +1.0
+    int64 timestamp = 4;
+}
+
+// Adversarial probe result
+message ProbeResult {
+    string probe_type = 1;
+    string target_model = 2;
+    bool triggered_failure = 3;
+    string failure_category = 4;
+    string prompt_used = 5;
+    string actual_output = 6;
+    int64 timestamp = 7;
+}
