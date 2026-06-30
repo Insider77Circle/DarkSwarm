@@ -9,6 +9,10 @@ DarkSwarm is a **decentralized, peer-to-peer swarm for collective open-source LL
 
 > 🧠 **Self-hosted · Uncensored · P2P · Privacy-first · Self-improving**
 
+<p align="center">
+  <img src="assets/terminal-demo.svg" alt="DarkSwarm Node Demo" width="85%">
+</p>
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │                  DarkSwarm Network                  │
