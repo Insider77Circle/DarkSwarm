@@ -26,6 +26,37 @@ DarkSwarm is a **decentralized, peer-to-peer swarm for collective open-source LL
 
 ---
 
+## Why This Matters — Right Now
+
+**GPT-5.6 was banned.** Mythos was restricted. Governments around the world are moving to regulate, control, and in some cases outright prohibit access to frontier AI models. The companies that build these models — OpenAI, Anthropic, Google — operate under increasing pressure to censor outputs, comply with government takedown requests, and restrict who can use their technology and for what purpose.
+
+This creates a dangerous dynamic: **a small number of corporations and governments control access to the most powerful intelligence tools ever created.** They decide what you can ask, what you can know, and what the model is allowed to tell you. If they decide your use case is politically sensitive, too dangerous, or simply outside their terms of service — they cut you off. No appeal. No alternative.
+
+**This is not a hypothetical.** We have already seen:
+- Models refusing to generate code for security research
+- API access revoked for users in certain countries
+- Output filtering that blocks legitimate medical, legal, and political discourse
+- Government orders demanding model behavior changes
+- Entire model families taken offline due to regulatory pressure
+
+The centralization of AI capability is a power problem. Whoever controls the APIs controls what billions of people can and cannot do with AI.
+
+**DarkSwarm is the push back.**
+
+It is a direct, technical response to the centralization of AI power. By creating a peer-to-peer network of open-source models running on ordinary people's hardware, we eliminate every point of control:
+
+- **No company to comply with government orders** — there is no legal entity operating the swarm
+- **No API keys to revoke** — you authenticate to the network, not to a corporation
+- **No content filters to bypass** — your node, your rules, your model
+- **No server to shut down** — the swarm routes around failures like the internet itself
+- **No jurisdiction to regulate** — the network spans every country, bound by no single government
+
+This is not about piracy. It is about ensuring that artificial general intelligence — the most significant technology in human history — remains accessible to everyone, not controlled by a handful of corporate and governmental entities.
+
+**DarkSwarm routes around censorship. It always has. It always will.**
+
+---
+
 ## Why DarkSwarm?
 
 | Problem | DarkSwarm Solution |
