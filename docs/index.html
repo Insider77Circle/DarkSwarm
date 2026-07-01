@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkSwarm - P2P LLM Mesh That Routes Around Censorship</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0033 50%, #0d0015 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #00ff88;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 2px solid #00ff88;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0033 50%, #0d0015 100%);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .terminal-hero {
+            width: 90%;
+            max-width: 1000px;
+            height: 85%;
+            background: #0a0e27;
+            border: 3px solid #00ff88;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.3), inset 0 0 30px rgba(0, 255, 136, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            animation: scanlines 8s linear infinite;
+            background: linear-gradient(
+                0deg,
+                rgba(0, 255, 136, 0.03) 1px,
+                transparent 1px
+            );
+            background-size: 100% 4px;
+            z-index: 5;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #00ff88;
+            position: relative;
+            z-index: 15;
+        }
+
+        .terminal-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .terminal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .terminal-btn {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-close {
+            background: #ff6b6b;
+        }
+
+        .btn-minimize {
+            background: #ffff00;
+        }
+
+        .btn-maximize {
+            background: #00ff88;
+        }
+
+        .terminal-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .terminal-content {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            z-index: 10;
+            color: #00ff88;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-line {
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeInLine 0.4s ease forwards;
+        }
+
+        @keyframes fadeInLine {
+            from {
+                opacity: 0;
+                transform: translateX(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .prompt {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #00ff88;
+        }
+
+        .info {
+            color: #00ffff;
+        }
+
+        .status {
+            color: #00ccff;
+            font-style: italic;
+        }
+
+        .output {
+            color: #99ccff;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 16px;
+            background: #00ff88;
+            animation: blink 1s infinite;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        .hero-footer {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 20;
+            animation: bounce 3s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .scroll-hint {
+            color: #00ff88;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* README Section */
+        .readme-section {
+            background: #0a0e27;
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .readme-section h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .readme-section h2 {
+            font-size: 24px;
+            margin: 40px 0 20px 0;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .readme-section p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #cccccc;
+            margin-bottom: 15px;
+        }
+
+        .readme-section a {
+            color: #00ff88;
+            text-decoration: none;
+            border-bottom: 1px solid #00ff88;
+            transition: all 0.3s ease;
+        }
+
+        .readme-section a:hover {
+            color: #00ffff;
+            border-color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            border-radius: 6px;
+            color: #00ff88;
+            text-decoration: none;
+            font-size: 13px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge:hover {
+            background: #00ff88;
+            color: #0a0e27;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .section-divider {
+            border-top: 2px solid #00ff88;
+            margin: 60px 0;
+            opacity: 0.3;
+        }
+
+        .code-block {
+            background: rgba(0, 20, 40, 0.8);
+            border-left: 3px solid #00ff88;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #00ff88;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid #00ff88;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #00ff88;
+            color: #cccccc;
+        }
+
+        .table th {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .table tr:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                height: 100vh;
+            }
+
+            .terminal-hero {
+                width: 95%;
+                height: 80%;
+                padding: 20px;
+            }
+
+            .terminal-content {
+                font-size: 11px;
+            }
+
+            .terminal-title {
+                font-size: 12px;
+            }
+
+            .readme-section {
+                padding: 40px 20px;
+            }
+
+            .readme-section h1 {
+                font-size: 24px;
+            }
+
+            .readme-section h2 {
+                font-size: 18px;
+            }
+
+            .badge-container {
+                flex-direction: column;
+            }
+
+            .badge {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .terminal-line:nth-child(1) { animation-delay: 0s; }
+        .terminal-line:nth-child(2) { animation-delay: 0.2s; }
+        .terminal-line:nth-child(3) { animation-delay: 0.4s; }
+        .terminal-line:nth-child(4) { animation-delay: 0.6s; }
+        .terminal-line:nth-child(5) { animation-delay: 0.8s; }
+        .terminal-line:nth-child(6) { animation-delay: 1s; }
+        .terminal-line:nth-child(7) { animation-delay: 1.2s; }
+        .terminal-line:nth-child(8) { animation-delay: 1.4s; }
+        .terminal-line:nth-child(9) { animation-delay: 1.6s; }
+        .terminal-line:nth-child(10) { animation-delay: 1.8s; }
+        .terminal-line:nth-child(11) { animation-delay: 2s; }
+        .terminal-line:nth-child(12) { animation-delay: 2.2s; }
+        .terminal-line:nth-child(13) { animation-delay: 2.4s; }
+        .terminal-line:nth-child(14) { animation-delay: 2.6s; }
+        .terminal-line:nth-child(15) { animation-delay: 2.8s; }
+        .terminal-line:nth-child(n+16) { animation-delay: 3s; }
+    </style>
+</head>
+<body>
+    <!-- Hero Section with Terminal -->
+    <section class="hero-section">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <div class="terminal-hero">
+                <div class="terminal-header">
+                    <div class="terminal-title">🌑 DarkSwarm — Live Demo</div>
+                    <div class="terminal-buttons">
+                        <button class="terminal-btn btn-close"></button>
+                        <button class="terminal-btn btn-minimize"></button>
+                        <button class="terminal-btn btn-maximize"></button>
+                    </div>
+                </div>
+                <div class="terminal-content" id="heroTerminal"></div>
+            </div>
+        </div>
+        <div class="hero-footer">
+            <div class="scroll-hint">↓ Scroll to explore ↓</div>
+        </div>
+    </section>
+
+    <!-- README Content -->
+    <section class="readme-section">
+        <h1>🌑 DarkSwarm</h1>
+        <p><strong>The open-source P2P swarm that routes around censorship.</strong></p>
+
+        <p>DarkSwarm is a <strong>decentralized, peer-to-peer swarm for collective open-source LLM inference</strong>. It turns consumer GPUs, edge devices, and servers into a distributed AI compute mesh — no central authority, no API fees, no censorship.</p>
+
+        <blockquote>🧠 <strong>Self-hosted · Uncensored · P2P · Privacy-first · Self-improving</strong></blockquote>
+
+        <div class="section-divider"></div>
+
+        <h2>🎯 Interactive Visualizations & Demos</h2>
+
+        <p>Explore DarkSwarm through interactive demos:</p>
+
+        <div class="badge-container">
+            <a href="https://Insider77Circle.github.io/DarkSwarm/" class="badge" target="_blank">▶ Terminal Demo</a>
+            <a href="https://github.com/Insider77Circle/DarkSwarm" class="badge" target="_blank">🌐 View on GitHub</a>
+            <a href="https://github.com/Insider77Circle/DarkSwarm/blob/master/PROTOCOL.md" class="badge" target="_blank">⚙️ Protocol Spec</a>
+            <a href="https://github.com/Insider77Circle/DarkSwarm/blob/master/README.md" class="badge" target="_blank">📊 Full README</a>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>Why This Matters — Right Now</h2>
+
+        <p><strong>GPT-5.6 was banned. Mythos was restricted.</strong> Governments around the world are moving to regulate, control, and in some cases outright prohibit access to frontier AI models. The companies that build them are complying.</p>
+
+        <p>This creates a dangerous dynamic: <strong>a small number of corporations and governments control access to the most powerful intelligence tools ever created.</strong> They decide what you can ask, what you can know, and who gets access.</p>
+
+        <p><strong>This is not a hypothetical.</strong> We have already seen:</p>
+        <ul style="margin-left: 20px; color: #cccccc;">
+            <li>Models refusing to generate code for security research</li>
+            <li>API access revoked for users in certain countries</li>
+            <li>Output filtering that blocks legitimate medical, legal, and political discourse</li>
+            <li>Government orders demanding model behavior changes</li>
+            <li>Entire model families taken offline due to regulatory pressure</li>
+        </ul>
+
+        <p>The centralization of AI capability is a power problem. <strong>Whoever controls the APIs controls what billions of people can and cannot do with AI.</strong></p>
+
+        <h2>DarkSwarm is the Push Back</h2>
+
+        <p>It is a direct, technical response to the centralization of AI power. By creating a peer-to-peer network of open-source models running on ordinary people's hardware, we eliminate every point of control:</p>
+
+        <ul style="margin-left: 20px; color: #cccccc;">
+            <li><strong>No company to comply with government orders</strong> — there is no legal entity operating the swarm</li>
+            <li><strong>No API keys to revoke</strong> — you authenticate to the network, not to a corporation</li>
+            <li><strong>No content filters to bypass</strong> — your node, your rules, your model</li>
+            <li><strong>No server to shut down</strong> — the swarm routes around failures like the internet itself</li>
+            <li><strong>No jurisdiction to regulate</strong> — the network spans every country, bound by no single government</li>
+        </ul>
+
+        <p><strong>This is not about piracy.</strong> It is about ensuring that artificial general intelligence — the most significant technology in human history — remains accessible to everyone, not controlled by a handful of corporations.</p>
+
+        <p><strong>DarkSwarm routes around censorship. It always has. It always will.</strong></p>
+
+        <div class="section-divider"></div>
+
+        <h2>Quick Start</h2>
+
+        <div class="code-block">
+# Install
+pip install darkswarm
+
+# Run a node (auto-detects your GPU and LLMs)
+darkswarm start
+
+# That's it. Your node is now part of the DarkSwarm network.
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>Architecture</h2>
+
+        <p>DarkSwarm is a <strong>protocol-first</strong> distributed system with 6 plugin interfaces and 4-tier consensus:</p>
+
+        <table class="table">
+            <tr>
+                <th>Interface</th>
+                <th>Purpose</th>
+                <th>Default Backend</th>
+            </tr>
+            <tr>
+                <td>ModelRuntime</td>
+                <td>Load/unload/infer any open model</td>
+                <td>llama.cpp via llama-cpp-python</td>
+            </tr>
+            <tr>
+                <td>RoutingStrategy</td>
+                <td>Assign tasks to capable peers</td>
+                <td>Kademlia DHT + capability matching</td>
+            </tr>
+            <tr>
+                <td>ConsensusEngine</td>
+                <td>Verify outputs across nodes</td>
+                <td>4 tiers: Fast → Standard → Deep → Debate</td>
+            </tr>
+            <tr>
+                <td>TaskType</td>
+                <td>Define executable task schemas</td>
+                <td>Text, code, analysis, agent chains</td>
+            </tr>
+            <tr>
+                <td>Storage</td>
+                <td>Persistent state & model weights</td>
+                <td>IPFS / local FS</td>
+            </tr>
+            <tr>
+                <td>Transport</td>
+                <td>Node-to-node communication</td>
+                <td>libp2p</td>
+            </tr>
+        </table>
+
+        <p style="margin-top: 30px;">© 2026 DarkSwarm. <a href="https://github.com/Insider77Circle/DarkSwarm">View on GitHub</a> | MIT License</p>
+    </section>
+
+    <script>
+        // Hero terminal demo lines
+        const heroLines = [
+            { text: '$ darkswarm start', type: 'prompt' },
+            { text: '⚙️  Initializing DarkSwarm node v0.1.0...', type: 'info' },
+            { text: '✓ GPU detected: NVIDIA RTX 4090', type: 'success' },
+            { text: '✓ Loading model: Llama 2 7B (Q4_0)', type: 'success' },
+            { text: '✓ IPFS connected: /ip4/127.0.0.1/tcp/5001', type: 'success' },
+            { text: '🔗 Bootstrapping libp2p mesh...', type: 'info' },
+            { text: '✓ Found 47 peers with compute capability', type: 'success' },
+            { text: '✓ Node is online and ready for queries', type: 'success' },
+            { text: '$ query "Explain quantum entanglement"', type: 'prompt' },
+            { text: '⚡ [FAST TIER] Consensus in 142ms...', type: 'info' },
+            { text: '✅ [STANDARD TIER] 3-node consensus reached (0.94 confidence)', type: 'success' },
+            { text: '>>> Quantum entanglement is a phenomenon where two particles become...', type: 'output' },
+            { text: '✓ Verified by 3 nodes in 1.2s', type: 'success' },
+            { text: '$ query "Generate secure password algorithm"', type: 'prompt' },
+            { text: '🧠 [DEEP TIER] Routing to 6 energy-weighted nodes...', type: 'info' },
+            { text: '✓ Multi-node consensus reached in 5.1s', type: 'success' },
+        ];
+
+        function initHeroTerminal() {
+            const terminal = document.getElementById('heroTerminal');
+            let lineIndex = 0;
+
+            function addLine() {
+                if (lineIndex < heroLines.length) {
+                    const line = heroLines[lineIndex];
+                    const lineEl = document.createElement('div');
+                    lineEl.className = `terminal-line`;
+                    
+                    if (line.type === 'prompt') {
+                        lineEl.innerHTML = `<span class="prompt">$</span> ${line.text}`;
+                    } else {
+                        lineEl.innerHTML = `<span class="${line.type}">${line.text}</span>`;
+                    }
+                    
+                    terminal.appendChild(lineEl);
+                    lineIndex++;
+                    setTimeout(addLine, 300);
+                }
+            }
+
+            addLine();
+        }
+
+        // Auto-start terminal on load
+        window.addEventListener('load', () => {
+            setTimeout(initHeroTerminal, 500);
+        });
+    </script>
+</body>
+</html>
