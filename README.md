@@ -1,5 +1,9 @@
 # DarkSwarm
 
+![DarkSwarm Cyberpunk Demo](docs/assets/demo.gif)
+
+*DarkSwarm P2P LLM Mesh — cyberpunk terminal demo*
+
 **P2P decentralized swarm for local LLM inference — self-hosted llama.cpp mesh (no API fees).**
 
 [![GitHub stars](https://img.shields.io/github/stars/Insider77Circle/DarkSwarm?style=social)](https://github.com/Insider77Circle/DarkSwarm/stargazers) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Issues](https://img.shields.io/github/issues/Insider77Circle/DarkSwarm)](https://github.com/Insider77Circle/DarkSwarm/issues)
