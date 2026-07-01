@@ -1,4 +1,4 @@
-# DarkSwarm
+# 🌑 DarkSwarm
 
 **The open-source P2P swarm that routes around censorship.**
 
@@ -9,32 +9,51 @@ DarkSwarm is a **decentralized, peer-to-peer swarm for collective open-source LL
 
 > 🧠 **Self-hosted · Uncensored · P2P · Privacy-first · Self-improving**
 
+---
+
+## 🎯 Interactive Visualizations
+
+### Network Topology
+See the swarm in action — nodes connecting, pulsing, and routing data packets across the mesh in real-time.
+
 <p align="center">
-  <img src="assets/terminal-demo.svg" alt="DarkSwarm Node Demo" width="85%">
+  <a href="https://github.com/Insider77Circle/DarkSwarm/blob/master/assets/network-visualization.html" target="_blank">
+    <img src="https://img.shields.io/badge/View%20Interactive%20Network-Launch%20Visualization-00ff88?style=for-the-badge&logo=github" alt="View Network Visualization">
+  </a>
 </p>
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  DarkSwarm Network                  │
-│                                                     │
-│   Edge ◄──► Consumer ◄──► Pro ◄──► Server          │
-│   (Phone)     (GPU)      (WS)      (DC)             │
-│        ↕         ↕          ↕          ↕            │
-│   ┌─────────────────────────────────────────────┐   │
-│   │     libp2p DHT / IPFS P2P Mesh             │   │
-│   └─────────────────────────────────────────────┘   │
-│                                                     │
-│   Auto-detect → Join → Serve → Probe → Learn       │
-└─────────────────────────────────────────────────────┘
-```
+**Features:**
+- 🔵 12 dynamic nodes (Edge, Consumer, Professional, Server)
+- 📊 Real-time metrics: active nodes, tasks processed, latency, bandwidth
+- ✨ Glowing neon effects with pulsing glow halos
+- 🚀 Animated data packets flowing between peers
+- 🌌 Dark theme with grid background
+
+### Consensus Tier Flow
+Understand how DarkSwarm routes queries through 4-tier consensus for speed, accuracy, and adversarial self-improvement.
+
+<p align="center">
+  <a href="https://github.com/Insider77Circle/DarkSwarm/blob/master/assets/consensus-tiers.html" target="_blank">
+    <img src="https://img.shields.io/badge/View%20Consensus%20Flow-Launch%20Diagram-00ff88?style=for-the-badge&logo=github" alt="View Consensus Tiers">
+  </a>
+</p>
+
+**The 4 Tiers:**
+
+| Icon | Tier | Speed | Nodes | Use Case |
+|------|------|-------|-------|----------|
+| ⚡ | **Fast (Speculative)** | ~10ms | 1 | Real-time chat, low-stakes queries |
+| ✅ | **Standard** | ~1s | 3 | Normal queries, balanced reliability |
+| 🧠 | **Deep (Energy-Weighted)** | ~5s | 5-7 | High-stakes decisions, safety-critical |
+| ⚔️ | **Debate (Multi-Agent)** | ~30s | 7-15 | Edge cases, novel problems, self-hardening |
 
 ---
 
 ## Why This Matters — Right Now
 
-**GPT-5.6 was banned.** Mythos was restricted. Governments around the world are moving to regulate, control, and in some cases outright prohibit access to frontier AI models. The companies that build these models — OpenAI, Anthropic, Google — operate under increasing pressure to censor outputs, comply with government takedown requests, and restrict who can use their technology and for what purpose.
+**GPT-5.6 was banned.** Mythos was restricted. Governments around the world are moving to regulate, control, and in some cases outright prohibit access to frontier AI models. The companies that build them are complying.
 
-This creates a dangerous dynamic: **a small number of corporations and governments control access to the most powerful intelligence tools ever created.** They decide what you can ask, what you can know, and what the model is allowed to tell you. If they decide your use case is politically sensitive, too dangerous, or simply outside their terms of service — they cut you off. No appeal. No alternative.
+This creates a dangerous dynamic: **a small number of corporations and governments control access to the most powerful intelligence tools ever created.** They decide what you can ask, what you can know, and who gets access.
 
 **This is not a hypothetical.** We have already seen:
 - Models refusing to generate code for security research
@@ -55,7 +74,7 @@ It is a direct, technical response to the centralization of AI power. By creatin
 - **No server to shut down** — the swarm routes around failures like the internet itself
 - **No jurisdiction to regulate** — the network spans every country, bound by no single government
 
-This is not about piracy. It is about ensuring that artificial general intelligence — the most significant technology in human history — remains accessible to everyone, not controlled by a handful of corporate and governmental entities.
+This is not about piracy. It is about ensuring that artificial general intelligence — the most significant technology in human history — remains accessible to everyone, not controlled by a handful of corporations.
 
 **DarkSwarm routes around censorship. It always has. It always will.**
 
@@ -76,7 +95,7 @@ This is not about piracy. It is about ensuring that artificial general intellige
 
 ## Keywords & Topics
 
-`p2p` `llm` `decentralized` `swarm` `open-source` `privacy` `distributed` `uncensored` `self-hosted` `peer-to-peer` `llm-inference` `distributed-computing` `p2p-compute` `federated-learning` `collective-intelligence` `mesh-network` `local-llm` `edge-computing` `ai` `anti-censorship`
+`p2p` `llm` `decentralized` `swarm` `open-source` `privacy` `distributed` `uncensored` `self-hosted` `peer-to-peer` `llm-inference` `distributed-computing` `p2p-compute` `federated-learning` `collective-intelligence` `anti-censorship` `mesh-network` `consensus` `adversarial-training`
 
 ---
 
@@ -108,6 +127,7 @@ DarkSwarm is a **protocol-first** distributed system with 6 plugin interfaces:
 | `Transport` | Node-to-node communication | libp2p |
 
 **4-tier consensus system:**
+
 | Tier | Nodes | Latency | Use Case |
 |---|---|---|---|
 | ⚡ Fast (speculative) | 1 | ~10ms | Low-stakes, real-time chat |
@@ -125,6 +145,10 @@ DarkSwarm/
 ├── README.md                ← This file
 ├── setup.py                 ← pip install darkswarm
 ├── .gitignore
+├── assets/                  ← Interactive visualizations
+│   ├── network-visualization.html  ← Network topology (animated)
+│   ├── consensus-tiers.html        ← Consensus flow diagram
+│   └── terminal-demo.svg
 ├── interfaces/              ← 6 plugin interfaces
 │   ├── model_runtime.py
 │   ├── routing_strategy.py
