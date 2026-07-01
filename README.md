@@ -11,7 +11,25 @@ DarkSwarm is a **decentralized, peer-to-peer swarm for collective open-source LL
 
 ---
 
-## 🎯 Interactive Visualizations
+## 🎯 Interactive Visualizations & Demos
+
+### 0️⃣ Terminal Demo — See It In Action
+Watch a live DarkSwarm node startup, connect to 47 peers, and handle queries through multi-tier consensus. Autoplays on load.
+
+<p align="center">
+  <a href="https://raw.githack.com/Insider77Circle/DarkSwarm/master/assets/terminal-demo.html" target="_blank">
+    <img src="https://img.shields.io/badge/View%20Terminal%20Demo-Launch%20Interactive-00ff88?style=for-the-badge&logo=github" alt="View Terminal Demo">
+  </a>
+</p>
+
+**Features:**
+- 🎬 **Autoplay on load** — demo starts immediately
+- ⚡ **Real workflow** — startup → peer discovery → queries → consensus → shutdown
+- 📊 **Live stats** — nodes connected, queries processed, latency, uptime
+- 🎮 **Full controls** — Play/Pause/Clear/Restart buttons
+- 🌈 **Terminal aesthetic** — scanlines, cursor blink, dark neon theme
+
+---
 
 ### 1️⃣ Network Topology — Live Swarm Visualization
 See the swarm in action — nodes connecting, pulsing, and routing data packets across the mesh in real-time.
@@ -72,7 +90,7 @@ Input → ModelRuntime → RoutingStrategy → ConsensusEngine → Storage/Trans
 Interactive card-flip comparing centralized AI problems vs DarkSwarm solutions:
 - 🔇 Censorship & Content Filters
 - 💸 API Costs & Rate Limits
-- ���️ Privacy Violations
+- 👁️ Privacy Violations
 - 🧊 Model Stagnation
 - 🛑 Centralized Shutdown Risk
 
@@ -185,7 +203,8 @@ DarkSwarm/
 ├── README.md                ← This file
 ├── setup.py                 ← pip install darkswarm
 ├── .gitignore
-├── assets/                  ← Interactive visualizations
+├── assets/                  ← Interactive visualizations & demos
+│   ├── terminal-demo.html          ← Terminal autoplay demo
 │   ├── network-visualization.html  ← Network topology (animated)
 │   ├── consensus-tiers.html        ← Consensus flow diagram
 │   ├── architecture-flow.html       ← Architecture, carousel, metrics
