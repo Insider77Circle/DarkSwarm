@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkSwarm Consensus Tiers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0033 50%, #0d0015 100%);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ff88;
+            margin-bottom: 40px;
+            font-size: 28px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .consensus-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tier {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(0, 20, 40, 0.6);
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tier:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+        }
+
+        .tier-fast {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .tier-standard {
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .tier-deep {
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .tier-debate {
+            border-color: #ffff00;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.3);
+        }
+
+        .tier::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .tier-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .tier-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .tier-fast .tier-name { color: #ff6b6b; }
+        .tier-standard .tier-name { color: #00ffff; }
+        .tier-deep .tier-name { color: #00ff88; }
+        .tier-debate .tier-name { color: #ffff00; }
+
+        .tier-stat {
+            font-size: 12px;
+            margin: 8px 0;
+            color: #aaaaff;
+            font-style: italic;
+        }
+
+        .tier-stat strong {
+            color: #00ff88;
+            font-style: normal;
+        }
+
+        .nodes-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid currentColor;
+            border-radius: 20px;
+            padding: 6px 12px;
+            margin: 10px 0;
+            font-size: 11px;
+            color: inherit;
+        }
+
+        .tier-fast .nodes-badge { color: #ff6b6b; border-color: #ff6b6b; }
+        .tier-standard .nodes-badge { color: #00ffff; border-color: #00ffff; }
+        .tier-deep .nodes-badge { color: #00ff88; border-color: #00ff88; }
+        .tier-debate .nodes-badge { color: #ffff00; border-color: #ffff00; }
+
+        .tier-description {
+            font-size: 11px;
+            line-height: 1.4;
+            color: #99ccff;
+            margin-top: 12px;
+        }
+
+        .arrow {
+            flex: 0 0 auto;
+            color: #00ff88;
+            font-size: 24px;
+            animation: bounce 1.5s infinite;
+            margin-top: 40px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(8px); }
+        }
+
+        .flow-info {
+            background: rgba(0, 20, 40, 0.5);
+            border: 1px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 40px;
+            color: #00ff88;
+        }
+
+        .flow-info h2 {
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .flow-info p {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #99ccff;
+        }
+
+        .flow-info p strong {
+            color: #00ff88;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            font-size: 11px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .consensus-flow {
+                flex-direction: column;
+            }
+            .arrow {
+                transform: rotate(90deg);
+                margin: 0;
+                margin: 20px 0;
+            }
+            h1 {
+                font-size: 20px;
+            }
+        }
+
+        .pulsing-stat {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 DarkSwarm Consensus Tiers</h1>
+        
+        <div class="consensus-flow">
+            <!-- Fast Tier -->
+            <div class="tier tier-fast">
+                <div class="tier-icon">⚡</div>
+                <div class="tier-name">Fast (Speculative)</div>
+                <div class="tier-stat"><strong class="pulsing-stat">~10ms</strong> latency</div>
+                <div class="nodes-badge">1 Node</div>
+                <div class="tier-description">
+                    Zero consensus. Fastest possible response for real-time chat and low-stakes queries.
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <!-- Standard Tier -->
+            <div class="tier tier-standard">
+                <div class="tier-icon">✅</div>
+                <div class="tier-name">Standard</div>
+                <div class="tier-stat"><strong class="pulsing-stat">~1s</strong> latency</div>
+                <div class="nodes-badge">3 Nodes</div>
+                <div class="tier-description">
+                    3-node majority consensus. Balanced speed & reliability for normal queries.
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <!-- Deep Tier -->
+            <div class="tier tier-deep">
+                <div class="tier-icon">🧠</div>
+                <div class="tier-name">Deep (Energy-Weighted)</div>
+                <div class="tier-stat"><strong class="pulsing-stat">~5s</strong> latency</div>
+                <div class="nodes-badge">5-7 Nodes</div>
+                <div class="tier-description">
+                    Weighted by GPU compute capacity. For high-stakes decisions & safety-critical tasks.
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <!-- Debate Tier -->
+            <div class="tier tier-debate">
+                <div class="tier-icon">⚔️</div>
+                <div class="tier-name">Debate (Multi-Agent)</div>
+                <div class="tier-stat"><strong class="pulsing-stat">~30s</strong> latency</div>
+                <div class="nodes-badge">7-15 Nodes</div>
+                <div class="tier-description">
+                    Adversarial multi-agent consensus. For edge cases, novel problems, and self-improvement.
+                </div>
+            </div>
+        </div>
+
+        <!-- Flow Information -->
+        <div class="flow-info">
+            <h2>📊 Consensus Flow Logic</h2>
+            <p>
+                <strong>Query Routing:</strong> When you submit a query, DarkSwarm automatically routes it through one or more consensus tiers based on the task requirements, network conditions, and your configured risk tolerance.
+            </p>
+            <p style="margin-top: 12px;">
+                <strong>Escalation:</strong> If a <strong>Fast</strong> response cannot be verified or fails validation, the query automatically escalates to <strong>Standard</strong>. If <strong>Standard</strong> consensus fails, it escalates to <strong>Deep</strong>. Finally, <strong>Debate</strong> is used for adversarial hardening and novel problem-solving.
+            </p>
+            <p style="margin-top: 12px;">
+                <strong>Self-Improvement:</strong> In <strong>Debate</strong> tier, nodes generate multiple candidate responses and argue about correctness. This process creates training data that improves your model over time, without any central server collecting data.
+            </p>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ff6b6b; box-shadow: 0 0 8px #ff6b6b;"></div>
+                <span>Real-Time / Speculative</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #00ffff; box-shadow: 0 0 8px #00ffff;"></div>
+                <span>Standard Verification</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #00ff88; box-shadow: 0 0 8px #00ff88;"></div>
+                <span>High-Confidence Consensus</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ffff00; box-shadow: 0 0 8px #ffff00;"></div>
+                <span>Multi-Agent Adversarial</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
