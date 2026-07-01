@@ -17,7 +17,7 @@ DarkSwarm is a **decentralized, peer-to-peer swarm for collective open-source LL
 See the swarm in action — nodes connecting, pulsing, and routing data packets across the mesh in real-time.
 
 <p align="center">
-  <a href="https://github.com/Insider77Circle/DarkSwarm/blob/master/assets/network-visualization.html" target="_blank">
+  <a href="https://raw.githack.com/Insider77Circle/DarkSwarm/master/assets/network-visualization.html" target="_blank">
     <img src="https://img.shields.io/badge/View%20Interactive%20Network-Launch%20Visualization-00ff88?style=for-the-badge&logo=github" alt="View Network Visualization">
   </a>
 </p>
@@ -35,7 +35,7 @@ See the swarm in action — nodes connecting, pulsing, and routing data packets 
 Understand how DarkSwarm routes queries through 4-tier consensus for speed, accuracy, and adversarial self-improvement.
 
 <p align="center">
-  <a href="https://github.com/Insider77Circle/DarkSwarm/blob/master/assets/consensus-tiers.html" target="_blank">
+  <a href="https://raw.githack.com/Insider77Circle/DarkSwarm/master/assets/consensus-tiers.html" target="_blank">
     <img src="https://img.shields.io/badge/View%20Consensus%20Flow-Launch%20Diagram-00ff88?style=for-the-badge&logo=github" alt="View Consensus Tiers">
   </a>
 </p>
@@ -55,7 +55,7 @@ Understand how DarkSwarm routes queries through 4-tier consensus for speed, accu
 All-in-one dashboard showing the complete pipeline, problem/solution pairs, and live network stats.
 
 <p align="center">
-  <a href="https://github.com/Insider77Circle/DarkSwarm/blob/master/assets/architecture-flow.html" target="_blank">
+  <a href="https://raw.githack.com/Insider77Circle/DarkSwarm/master/assets/architecture-flow.html" target="_blank">
     <img src="https://img.shields.io/badge/View%20Architecture%20%26%20Metrics-Launch%20Dashboard-00ff88?style=for-the-badge&logo=github" alt="View Architecture Flow">
   </a>
 </p>
@@ -72,7 +72,7 @@ Input → ModelRuntime → RoutingStrategy → ConsensusEngine → Storage/Trans
 Interactive card-flip comparing centralized AI problems vs DarkSwarm solutions:
 - 🔇 Censorship & Content Filters
 - 💸 API Costs & Rate Limits
-- 👁️ Privacy Violations
+- ���️ Privacy Violations
 - 🧊 Model Stagnation
 - 🛑 Centralized Shutdown Risk
 
