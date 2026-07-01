@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkSwarm Terminal Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0033 50%, #0d0015 100%);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ff88;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #00ff88;
+            color: #0a0e27;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .terminal {
+            background: #0a0e27;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+            height: 500px;
+            overflow-y: auto;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+            position: relative;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            animation: scanlines 8s linear infinite;
+            background: linear-gradient(
+                0deg,
+                rgba(0, 255, 136, 0.03) 1px,
+                transparent 1px
+            );
+            background-size: 100% 4px;
+            z-index: 1;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        .terminal-content {
+            position: relative;
+            z-index: 2;
+            color: #00ff88;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .line {
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .prompt {
+            color: #00ff88;
+            margin-right: 8px;
+            font-weight: bold;
+            min-width: 30px;
+        }
+
+        .success {
+            color: #00ff88;
+        }
+
+        .info {
+            color: #00ffff;
+        }
+
+        .warning {
+            color: #ffff00;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .status {
+            color: #00ccff;
+            font-style: italic;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: #00ff88;
+            margin-left: 4px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .stat-box {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .stat-label {
+            color: #00ccff;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        .stat-value {
+            color: #00ff88;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Scrollbar styling */
+        .terminal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terminal::-webkit-scrollbar-track {
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 10px;
+        }
+
+        .terminal::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 10px;
+        }
+
+        .terminal::-webkit-scrollbar-thumb:hover {
+            background: #00ffff;
+        }
+
+        .demo-status {
+            text-align: center;
+            color: #00ccff;
+            margin-top: 15px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-status.active {
+            color: #00ff88;
+        }
+
+        @media (max-width: 768px) {
+            .terminal {
+                height: 400px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .terminal-content {
+                font-size: 10px;
+            }
+
+            .controls {
+                gap: 10px;
+            }
+
+            button {
+                padding: 8px 15px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖥️ DarkSwarm Terminal Demo</h1>
+
+        <div class="controls">
+            <button onclick="startDemo()" id="startBtn">▶ Start Demo</button>
+            <button onclick="pauseDemo()" id="pauseBtn" disabled>⏸ Pause</button>
+            <button onclick="clearTerminal()">🗑️ Clear</button>
+            <button onclick="restartDemo()">🔄 Restart</button>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-content" id="terminal"></div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-box">
+                <div class="stat-label">Nodes Connected</div>
+                <div class="stat-value" id="nodesConnected">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Queries Processed</div>
+                <div class="stat-value" id="queriesProcessed">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Avg Latency</div>
+                <div class="stat-value" id="avgLatency">0ms</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Uptime</div>
+                <div class="stat-value" id="uptime">0s</div>
+            </div>
+        </div>
+
+        <div class="demo-status" id="demoStatus">Ready to start</div>
+    </div>
+
+    <script>
+        let isPlaying = false;
+        let isPaused = false;
+        let demoTimeouts = [];
+        let lineCount = 0;
+        let startTime = null;
+        let nodesCount = 0;
+        let queriesCount = 0;
+
+        const demoScript = [
+            { delay: 0, type: 'prompt', text: 'darkswarm start' },
+            { delay: 500, type: 'info', text: '⚙️  Initializing DarkSwarm node v0.1.0...' },
+            { delay: 1000, type: 'success', text: '✓ GPU detected: NVIDIA RTX 4090' },
+            { delay: 1500, type: 'success', text: '✓ Loading model: Llama 2 7B (Q4_0)' },
+            { delay: 2000, type: 'info', text: '🔍 Scanning local IPFS daemon...' },
+            { delay: 2500, type: 'success', text: '✓ IPFS connected: /ip4/127.0.0.1/tcp/5001' },
+            { delay: 3000, type: 'info', text: '🔗 Bootstrapping libp2p mesh...' },
+            { delay: 3500, type: 'status', text: '  ↳ Connecting to bootstrap node 1...' },
+            { delay: 4000, type: 'success', text: '  ✓ Connected: 12D3KooWpEysdizVYhBHnFxVjWiMjHxvt9' },
+            { delay: 4500, type: 'status', text: '  ↳ Connecting to bootstrap node 2...' },
+            { delay: 5000, type: 'success', text: '  ✓ Connected: 12D3KooQmYn5WPsWYHvMWXyPPJx7cGx4A' },
+            { delay: 5500, type: 'info', text: '🌐 Discovering peers in DHT...' },
+            { delay: 6000, type: 'success', text: '✓ Found 47 peers with compute capability' },
+            { delay: 6500, type: 'success', text: '✓ Node is online and ready for queries' },
+            { delay: 7000, type: 'status', text: '', special: 'statsUpdate', statUpdate: { nodes: 47 } },
+            { delay: 7500, type: 'prompt', text: 'query "Explain quantum entanglement in 100 words"' },
+            { delay: 8000, type: 'info', text: '⚡ [FAST TIER] Sending to 1 node...' },
+            { delay: 8500, type: 'status', text: '  ↳ Response received in 142ms' },
+            { delay: 9000, type: 'success', text: '  ✓ Confidence: 0.78 (below threshold, escalating)' },
+            { delay: 9500, type: 'info', text: '✅ [STANDARD TIER] Sending to 3 nodes...' },
+            { delay: 10000, type: 'status', text: '  ↳ Node 1: 987ms | Node 2: 1034ms | Node 3: 956ms' },
+            { delay: 10500, type: 'success', text: '  ✓ Consensus reached (3/3 agree)' },
+            { delay: 11000, type: 'status', text: '  ✓ Confidence: 0.94' },
+            { delay: 11500, type: 'status', text: '', special: 'statsUpdate', statUpdate: { queries: 1, latency: 992 } },
+            { delay: 12000, type: 'success', text: '\n>>> RESPONSE (1207ms total):\n' },
+            { delay: 12500, type: 'success', text: 'Quantum entanglement is a phenomenon where two particles become\ncorrelated such that the state of one instantly influences the other,\nregardless of distance. When measured, entangled particles exhibit\ncolumn properties - measuring one determines the other\'s state. Einstein\ncalled this "spooky action at a distance." This principle underpins\nquantum computing and quantum cryptography applications.\n' },
+            { delay: 14000, type: 'status', text: '', special: 'statsUpdate', statUpdate: { queries: 2 } },
+            { delay: 14500, type: 'prompt', text: 'query "Generate secure password algorithm in Python"' },
+            { delay: 15000, type: 'info', text: '🧠 [DEEP TIER] High-stakes request, routing to 6 nodes...' },
+            { delay: 15500, type: 'status', text: '  ↳ Weighted by compute: 2x RTX 4090, 2x RTX 3080, 2x V100' },
+            { delay: 16000, type: 'status', text: '  ↳ Node responses: 1456ms | 1289ms | 1523ms | 1401ms | 1378ms | 1445ms' },
+            { delay: 16500, type: 'success', text: '  ✓ Energy-weighted consensus: 0.97' },
+            { delay: 17000, type: 'status', text: '', special: 'statsUpdate', statUpdate: { latency: 1415 } },
+            { delay: 17500, type: 'success', text: '>>> RESPONSE (1523ms, verified by 6 nodes):\n' },
+            { delay: 18000, type: 'success', text: 'import secrets\nimport hashlib\n\ndef generate_secure_password(length=32):\n    return secrets.token_urlsafe(length)\n\ndef hash_password(password):\n    salt = secrets.token_bytes(32)\n    key = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 100000)\n    return salt + key\n' },
+            { delay: 19500, type: 'info', text: '\n📊 Network Stats:' },
+            { delay: 20000, type: 'status', text: '  Active peers: 47' },
+            { delay: 20500, type: 'status', text: '  Queries processed: 2' },
+            { delay: 21000, type: 'status', text: '  Average consensus latency: 1203ms' },
+            { delay: 21500, type: 'status', text: '  Data routed: 2.3 MB' },
+            { delay: 22000, type: 'status', text: '  No central logging. No corporate servers. No censorship.' },
+            { delay: 23000, type: 'status', text: '', special: 'statsUpdate', statUpdate: { queries: 3 } },
+            { delay: 23500, type: 'prompt', text: 'exit' },
+            { delay: 24000, type: 'info', text: '👋 Shutting down node gracefully...' },
+            { delay: 24500, type: 'success', text: '✓ Disconnected from 47 peers' },
+            { delay: 25000, type: 'success', text: '✓ Model unloaded from VRAM' },
+            { delay: 25500, type: 'success', text: '✓ Node offline. Thanks for running DarkSwarm!' }
+        ];
+
+        function addLine(type, text) {
+            if (isPaused) return;
+
+            const terminal = document.getElementById('terminal');
+            const line = document.createElement('div');
+            line.className = `line ${type}`;
+
+            if (type === 'prompt') {
+                line.innerHTML = `<span class="prompt">$</span><span class="info">${escapeHtml(text)}<span class="cursor"></span></span>`;
+            } else {
+                line.innerHTML = `<span class="${type}">${escapeHtml(text)}</span>`;
+            }
+
+            terminal.appendChild(line);
+            terminal.parentElement.scrollTop = terminal.parentElement.scrollHeight;
+            lineCount++;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function updateStats(updates) {
+            if (updates.nodes !== undefined) {
+                nodesCount = updates.nodes;
+                document.getElementById('nodesConnected').textContent = nodesCount;
+            }
+            if (updates.queries !== undefined) {
+                queriesCount = updates.queries;
+                document.getElementById('queriesProcessed').textContent = queriesCount;
+            }
+            if (updates.latency !== undefined) {
+                document.getElementById('avgLatency').textContent = updates.latency + 'ms';
+            }
+        }
+
+        function updateUptime() {
+            if (startTime) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('uptime').textContent = elapsed + 's';
+            }
+        }
+
+        function startDemo() {
+            if (isPlaying) return;
+
+            isPlaying = true;
+            isPaused = false;
+            startTime = Date.now();
+
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('pauseBtn').disabled = false;
+            document.getElementById('demoStatus').textContent = '▶ Demo running...';
+            document.getElementById('demoStatus').classList.add('active');
+
+            // Update uptime every second
+            const uptimeInterval = setInterval(() => {
+                if (!isPlaying) {
+                    clearInterval(uptimeInterval);
+                } else {
+                    updateUptime();
+                }
+            }, 1000);
+
+            demoScript.forEach((item) => {
+                const timeout = setTimeout(() => {
+                    if (!isPaused) {
+                        if (item.special === 'statsUpdate') {
+                            updateStats(item.statUpdate);
+                        } else {
+                            addLine(item.type, item.text);
+                        }
+                    }
+                }, item.delay);
+
+                demoTimeouts.push(timeout);
+            });
+
+            // Auto-restart after demo ends
+            const restartTimeout = setTimeout(() => {
+                isPlaying = false;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('pauseBtn').disabled = true;
+                document.getElementById('demoStatus').textContent = 'Demo complete. Click restart to replay.';
+                document.getElementById('demoStatus').classList.remove('active');
+            }, demoScript[demoScript.length - 1].delay + 2000);
+
+            demoTimeouts.push(restartTimeout);
+        }
+
+        function pauseDemo() {
+            if (!isPlaying) return;
+
+            isPaused = !isPaused;
+            const btn = document.getElementById('pauseBtn');
+            const status = document.getElementById('demoStatus');
+
+            if (isPaused) {
+                btn.textContent = '▶ Resume';
+                status.textContent = '⏸ Demo paused';
+                status.classList.remove('active');
+            } else {
+                btn.textContent = '⏸ Pause';
+                status.textContent = '▶ Demo running...';
+                status.classList.add('active');
+            }
+        }
+
+        function clearTerminal() {
+            document.getElementById('terminal').innerHTML = '';
+            lineCount = 0;
+        }
+
+        function restartDemo() {
+            isPlaying = false;
+            isPaused = false;
+            demoTimeouts.forEach(t => clearTimeout(t));
+            demoTimeouts = [];
+
+            clearTerminal();
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = true;
+            document.getElementById('pauseBtn').textContent = '⏸ Pause';
+            document.getElementById('demoStatus').textContent = 'Ready to start';
+            document.getElementById('demoStatus').classList.remove('active');
+            document.getElementById('nodesConnected').textContent = '0';
+            document.getElementById('queriesProcessed').textContent = '0';
+            document.getElementById('avgLatency').textContent = '0ms';
+            document.getElementById('uptime').textContent = '0s';
+
+            startDemo();
+        }
+
+        // Auto-start demo on page load
+        window.addEventListener('load', () => {
+            setTimeout(startDemo, 500);
+        });
+    </script>
+</body>
+</html>
