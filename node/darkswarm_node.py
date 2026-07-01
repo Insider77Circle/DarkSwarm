@@ -1,4 +1,4 @@
-"""DarkSwarm — Reference Node Implementation."""
+"""DarkSwarm — Reference Node Implementation with DI support."""
 
 import json
 import os
@@ -7,11 +7,14 @@ import time
 import uuid
 from pathlib import Path
 
+from node.runtime_registry import register_runtime, discover_entry_points, resolve_runtime
+from node.backends.mock_runtime import MockRuntime
+
 
 class DarkSwarmNode:
     """A single DarkSwarm node. Auto-detects hardware, joins the swarm, serves tasks."""
 
-    def __init__(self, config_path: str = None):
+    def __init__(self, config_path: str = None, model_runtime=None):
         self.node_id = str(uuid.uuid4())
         self.config = self._load_config(config_path)
         self.hardware = self._detect_hardware()
@@ -19,9 +22,25 @@ class DarkSwarmNode:
         self.peers = {}
         self.running = False
         self.adversarial_probe_results = []
+        self._runtime = model_runtime
+        self._init_runtime()
 
         print(f"[DarkSwarm] Node {self.node_id[:8]} initializing...")
         print(f"[DarkSwarm] Hardware: {self.hardware['tier']} tier")
+
+    def _init_runtime(self):
+        """Initialize the model runtime using DI or registry."""
+        discover_entry_points()
+        if self._runtime is None:
+            resolved = resolve_runtime(self.config.get("runtime"))
+            if resolved:
+                self._runtime = resolved()
+                print(f"[DarkSwarm] Runtime: {type(self._runtime).__name__}")
+            else:
+                self._runtime = MockRuntime()
+                print("[DarkSwarm] Runtime: MockRuntime (fallback)")
+        else:
+            print(f"[DarkSwarm] Runtime: {type(self._runtime).__name__} (injected)")
 
     def _load_config(self, config_path: str) -> dict:
         defaults = {
@@ -89,7 +108,7 @@ class DarkSwarmNode:
             print(f"[DarkSwarm] Probe complete: {probe['type']} -> {probe['result']}")
 
     def get_status(self) -> dict:
-        return {"node_id": self.node_id[:8], "hardware": self.hardware, "models": [m["type"] for m in self.model_info], "peers": len(self.peers), "running": self.running, "probes_run": len(self.adversarial_probe_results)}
+        return {"node_id": self.node_id[:8], "hardware": self.hardware, "models": [m["type"] for m in self.model_info], "peers": len(self.peers), "running": self.running, "probes_run": len(self.adversarial_probe_results), "runtime": type(self._runtime).__name__}
 
 
 def start():

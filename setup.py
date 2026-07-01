@@ -9,5 +9,10 @@ setup(
     packages=find_packages(),
     python_requires=">=3.10",
     install_requires=["psutil"],
-    entry_points={"console_scripts": ["darkswarm=node.darkswarm_node:start"]},
+    entry_points={
+        "console_scripts": ["darkswarm=node.darkswarm_node:start"],
+        "darkswarm.model_runtimes": [
+            "mock = node.backends.mock_runtime:MockRuntime",
+        ],
+    },
 )
