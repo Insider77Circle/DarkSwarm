@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkSwarm Architecture Flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0033 50%, #0d0015 100%);
+            font-family: 'Courier New', monospace;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ff88;
+            margin-bottom: 50px;
+            font-size: 28px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Architecture Flow */
+        .architecture-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 15px;
+            margin-bottom: 60px;
+            position: relative;
+            flex-wrap: wrap;
+        }
+
+        .flow-stage {
+            flex: 1;
+            min-width: 140px;
+            background: rgba(0, 20, 40, 0.7);
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .flow-stage:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+            border-color: #00ffff;
+        }
+
+        .flow-stage::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .stage-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .stage-title {
+            color: #00ff88;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stage-description {
+            font-size: 11px;
+            color: #99ccff;
+            line-height: 1.3;
+        }
+
+        .flow-arrow {
+            flex: 0 0 auto;
+            font-size: 24px;
+            color: #00ff88;
+            animation: bounce-right 1.5s infinite;
+            display: flex;
+            align-items: center;
+            height: 80px;
+        }
+
+        @keyframes bounce-right {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(8px); }
+        }
+
+        /* Animated data packet in flow */
+        .packet-trail {
+            position: absolute;
+            top: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            animation: packet-flow 4s infinite;
+            z-index: -1;
+        }
+
+        @keyframes packet-flow {
+            0% { left: -5%; width: 10%; }
+            100% { left: 105%; width: 10%; }
+        }
+
+        /* Comparison Carousel */
+        .carousel-section {
+            margin-bottom: 60px;
+        }
+
+        .carousel-title {
+            text-align: center;
+            color: #00ff88;
+            font-size: 22px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .carousel-container {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+            height: 320px;
+        }
+
+        .carousel-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 20, 40, 0.8);
+            border: 2px solid #00ff88;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            opacity: 0;
+            transform: rotateY(90deg);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-origin: center;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            perspective: 1000px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .carousel-card.active {
+            opacity: 1;
+            transform: rotateY(0deg);
+            z-index: 10;
+        }
+
+        .carousel-card.prev {
+            opacity: 0;
+            transform: rotateY(-90deg);
+        }
+
+        .card-label {
+            color: #00ccff;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .card-problem {
+            color: #ff6b6b;
+        }
+
+        .card-solution {
+            color: #00ff88;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin: 15px 0;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #00ffff;
+        }
+
+        .card-description {
+            font-size: 13px;
+            color: #99ccff;
+            line-height: 1.5;
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .carousel-btn {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-btn:hover {
+            background: #00ff88;
+            color: #0a0e27;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .carousel-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.3);
+            border: 1px solid #00ff88;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        /* Stats Dashboard */
+        .stats-section {
+            margin-top: 60px;
+        }
+
+        .stats-title {
+            text-align: center;
+            color: #00ff88;
+            font-size: 22px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: rgba(0, 20, 40, 0.7);
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .stat-card-1 { border-color: #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); }
+        .stat-card-2 { border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
+        .stat-card-3 { border-color: #ffff00; box-shadow: 0 0 15px rgba(255, 255, 0, 0.2); }
+        .stat-card-4 { border-color: #ff6b9d; box-shadow: 0 0 15px rgba(255, 107, 157, 0.2); }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #aaaaff;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #00ff88;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-card-1 .stat-value { color: #00ff88; }
+        .stat-card-2 .stat-value { color: #00ffff; }
+        .stat-card-3 .stat-value { color: #ffff00; }
+        .stat-card-4 .stat-value { color: #ff6b9d; }
+
+        .stat-subtext {
+            font-size: 10px;
+            color: #669999;
+            font-style: italic;
+        }
+
+        .pulse-anim {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @media (max-width: 768px) {
+            .architecture-flow {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+                height: auto;
+                width: 100%;
+            }
+
+            .carousel-card {
+                height: 250px;
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .carousel-title,
+            .stats-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 DarkSwarm: Architecture & Consensus Flow</h1>
+
+        <!-- Architecture Flow Section -->
+        <section class="architecture-flow">
+            <div class="flow-stage">
+                <div class="stage-icon">📥</div>
+                <div class="stage-title">Input</div>
+                <div class="stage-description">User query enters the network via libp2p transport</div>
+            </div>
+
+            <div class="flow-arrow">→</div>
+
+            <div class="flow-stage">
+                <div class="stage-icon">🧠</div>
+                <div class="stage-title">ModelRuntime</div>
+                <div class="stage-description">Load/execute open-source LLM via llama.cpp. GPU auto-detect.</div>
+            </div>
+
+            <div class="flow-arrow">→</div>
+
+            <div class="flow-stage">
+                <div class="stage-icon">🛣️</div>
+                <div class="stage-title">RoutingStrategy</div>
+                <div class="stage-description">Kademlia DHT selects best nodes by capability & latency</div>
+            </div>
+
+            <div class="flow-arrow">→</div>
+
+            <div class="flow-stage">
+                <div class="stage-icon">✅</div>
+                <div class="stage-title">ConsensusEngine</div>
+                <div class="stage-description">Verify output via 4-tier consensus (Fast/Standard/Deep/Debate)</div>
+            </div>
+
+            <div class="flow-arrow">→</div>
+
+            <div class="flow-stage">
+                <div class="stage-icon">💾</div>
+                <div class="stage-title">Storage/Transport</div>
+                <div class="stage-description">Persist weights to IPFS. Reply via libp2p mesh</div>
+            </div>
+
+            <div class="flow-arrow">→</div>
+
+            <div class="flow-stage">
+                <div class="stage-icon">📤</div>
+                <div class="stage-title">Output</div>
+                <div class="stage-description">Verified result returned to peer. No central logging.</div>
+            </div>
+        </section>
+
+        <!-- Comparison Carousel Section -->
+        <section class="carousel-section">
+            <h2 class="carousel-title">⚙️ Problem ↔ Solution</h2>
+            
+            <div class="carousel-container">
+                <!-- Card 1: Censorship -->
+                <div class="carousel-card active">
+                    <div class="card-label card-problem">🚫 The Problem</div>
+                    <div class="card-icon">🔇</div>
+                    <div class="card-title">Censorship & Content Filters</div>
+                    <div class="card-description">
+                        Centralized APIs can block queries and restrict output. Governments mandate content filtering. No appeal process.
+                    </div>
+                </div>
+
+                <!-- Card 2: Censorship Solution -->
+                <div class="carousel-card">
+                    <div class="card-label card-solution">✨ DarkSwarm</div>
+                    <div class="card-icon">🌐</div>
+                    <div class="card-title">Uncensored P2P Inference</div>
+                    <div class="card-description">
+                        You run your own node with your own model & rules. No central authority to comply with government orders.
+                    </div>
+                </div>
+
+                <!-- Card 3: API Costs -->
+                <div class="carousel-card">
+                    <div class="card-label card-problem">💸 The Problem</div>
+                    <div class="card-icon">💰</div>
+                    <div class="card-title">API Costs & Rate Limits</div>
+                    <div class="card-description">
+                        Per-token pricing. Rate limits. Pay-per-use model extracts maximum value from users while restricting access.
+                    </div>
+                </div>
+
+                <!-- Card 4: API Costs Solution -->
+                <div class="carousel-card">
+                    <div class="card-label card-solution">✨ DarkSwarm</div>
+                    <div class="card-icon">🆓</div>
+                    <div class="card-title">Free P2P Compute Sharing</div>
+                    <div class="card-description">
+                        No tokens, no fees, no rate limits. Contribute idle GPU cycles. Get unrestricted access to the swarm.
+                    </div>
+                </div>
+
+                <!-- Card 5: Privacy -->
+                <div class="carousel-card">
+                    <div class="card-label card-problem">👁️ The Problem</div>
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Privacy Violations</div>
+                    <div class="card-description">
+                        All queries sent to corporate servers. Logged, analyzed, sold. Your prompts are training data for competitors.
+                    </div>
+                </div>
+
+                <!-- Card 6: Privacy Solution -->
+                <div class="carousel-card">
+                    <div class="card-label card-solution">✨ DarkSwarm</div>
+                    <div class="card-icon">🔒</div>
+                    <div class="card-title">Privacy-Preserving Inference</div>
+                    <div class="card-description">
+                        All computation stays on your machine or trusted peers. No central logging. Your data is never sold.
+                    </div>
+                </div>
+
+                <!-- Card 7: Stagnation -->
+                <div class="carousel-card">
+                    <div class="card-label card-problem">🧊 The Problem</div>
+                    <div class="card-icon">⏸️</div>
+                    <div class="card-title">Model Stagnation</div>
+                    <div class="card-description">
+                        Proprietary models controlled by a few corporations. Slow iteration. Billions locked out of model development.
+                    </div>
+                </div>
+
+                <!-- Card 8: Stagnation Solution -->
+                <div class="carousel-card">
+                    <div class="card-label card-solution">✨ DarkSwarm</div>
+                    <div class="card-icon">🚀</div>
+                    <div class="card-title">Self-Improving Mesh</div>
+                    <div class="card-description">
+                        Adversarial probes + collective learning. Your node improves every time you use it. Community-driven development.
+                    </div>
+                </div>
+
+                <!-- Card 9: Centralization -->
+                <div class="carousel-card">
+                    <div class="card-label card-problem">🛑 The Problem</div>
+                    <div class="card-icon">🏢</div>
+                    <div class="card-title">Centralized Shutdown Risk</div>
+                    <div class="card-description">
+                        One court order. One regulation. Entire AI infrastructure goes dark. Power concentrated in hands of a few.
+                    </div>
+                </div>
+
+                <!-- Card 10: Centralization Solution -->
+                <div class="carousel-card">
+                    <div class="card-label card-solution">✨ DarkSwarm</div>
+                    <div class="card-icon">🌍</div>
+                    <div class="card-title">Unstoppable Mesh Network</div>
+                    <div class="card-description">
+                        No single point of failure. No company to regulate. Spans every country. Routes around censorship like the internet itself.
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-controls">
+                <button class="carousel-btn" onclick="prevCard()">← Previous</button>
+                <button class="carousel-btn" onclick="nextCard()">Next →</button>
+            </div>
+
+            <div class="carousel-indicator" id="indicators"></div>
+        </section>
+
+        <!-- Stats Dashboard Section -->
+        <section class="stats-section">
+            <h2 class="stats-title">📊 Live Network Metrics</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card stat-card-1">
+                    <div class="stat-icon">🔵</div>
+                    <div class="stat-label">Active Nodes</div>
+                    <div class="stat-value pulse-anim" id="stat1">0</div>
+                    <div class="stat-subtext">Contributing compute</div>
+                </div>
+
+                <div class="stat-card stat-card-2">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-label">Tasks Processed</div>
+                    <div class="stat-value pulse-anim" id="stat2">0</div>
+                    <div class="stat-subtext">Since network start</div>
+                </div>
+
+                <div class="stat-card stat-card-3">
+                    <div class="stat-icon">🖥️</div>
+                    <div class="stat-label">GPU Hours Contributed</div>
+                    <div class="stat-value pulse-anim" id="stat3">0</div>
+                    <div class="stat-subtext">Collective compute power</div>
+                </div>
+
+                <div class="stat-card stat-card-4">
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-label">Bytes Routed</div>
+                    <div class="stat-value pulse-anim" id="stat4">0</div>
+                    <div class="stat-subtext">P2P mesh throughput</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Carousel functionality
+        let currentCard = 0;
+        const totalCards = 10; // Number of problem/solution pairs
+
+        // Initialize indicators
+        function initIndicators() {
+            const container = document.getElementById('indicators');
+            for (let i = 0; i < totalCards; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => goToCard(i);
+                container.appendChild(dot);
+            }
+        }
+
+        function updateCarousel() {
+            const cards = document.querySelectorAll('.carousel-card');
+            const dots = document.querySelectorAll('.indicator-dot');
+
+            cards.forEach((card, index) => {
+                card.classList.remove('active', 'prev');
+                if (index === currentCard) {
+                    card.classList.add('active');
+                } else if (index < currentCard) {
+                    card.classList.add('prev');
+                }
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentCard);
+            });
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % totalCards;
+            updateCarousel();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + totalCards) % totalCards;
+            updateCarousel();
+        }
+
+        function goToCard(index) {
+            currentCard = index;
+            updateCarousel();
+        }
+
+        // Stats animations
+        function animateStats() {
+            const stats = [
+                { id: 'stat1', max: 156, label: '' },
+                { id: 'stat2', max: 8942, label: '' },
+                { id: 'stat3', max: 12847, label: '' },
+                { id: 'stat4', max: 549, label: ' GB' }
+            ];
+
+            stats.forEach(stat => {
+                const element = document.getElementById(stat.id);
+                let current = parseInt(element.textContent) || 0;
+                const target = Math.floor(Math.random() * stat.max * 0.8) + stat.max * 0.2;
+                const increment = (target - current) / 30;
+
+                const interval = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(interval);
+                    }
+                    element.textContent = Math.floor(current) + stat.label;
+                }, 50);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('stat1').textContent = Math.floor(Math.random() * 50 + 100);
+            document.getElementById('stat2').textContent = Math.floor(Math.random() * 5000 + 5000);
+            document.getElementById('stat3').textContent = Math.floor(Math.random() * 10000 + 5000);
+            document.getElementById('stat4').textContent = Math.floor(Math.random() * 300 + 200) + ' GB';
+        }
+
+        // Auto-update stats every 5 seconds
+        setInterval(updateStats, 5000);
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initIndicators();
+            updateCarousel();
+            animateStats();
+        });
+
+        // Auto-advance carousel every 8 seconds
+        setInterval(nextCard, 8000);
+    </script>
+</body>
+</html>
