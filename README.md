@@ -13,7 +13,7 @@ DarkSwarm is a **decentralized, peer-to-peer swarm for collective open-source LL
 
 ## 🎯 Interactive Visualizations
 
-### Network Topology
+### 1️⃣ Network Topology — Live Swarm Visualization
 See the swarm in action — nodes connecting, pulsing, and routing data packets across the mesh in real-time.
 
 <p align="center">
@@ -23,13 +23,15 @@ See the swarm in action — nodes connecting, pulsing, and routing data packets 
 </p>
 
 **Features:**
-- 🔵 12 dynamic nodes (Edge, Consumer, Professional, Server)
+- 🔵 12 dynamic nodes (Edge, Consumer, Professional, Server) in neon colors
 - 📊 Real-time metrics: active nodes, tasks processed, latency, bandwidth
 - ✨ Glowing neon effects with pulsing glow halos
 - 🚀 Animated data packets flowing between peers
 - 🌌 Dark theme with grid background
 
-### Consensus Tier Flow
+---
+
+### 2️⃣ Consensus Tier Flow — Query Routing Pipeline
 Understand how DarkSwarm routes queries through 4-tier consensus for speed, accuracy, and adversarial self-improvement.
 
 <p align="center">
@@ -46,6 +48,44 @@ Understand how DarkSwarm routes queries through 4-tier consensus for speed, accu
 | ✅ | **Standard** | ~1s | 3 | Normal queries, balanced reliability |
 | 🧠 | **Deep (Energy-Weighted)** | ~5s | 5-7 | High-stakes decisions, safety-critical |
 | ⚔️ | **Debate (Multi-Agent)** | ~30s | 7-15 | Edge cases, novel problems, self-hardening |
+
+---
+
+### 3️⃣ Architecture Flow, Comparison Carousel & Live Metrics
+All-in-one dashboard showing the complete pipeline, problem/solution pairs, and live network stats.
+
+<p align="center">
+  <a href="https://github.com/Insider77Circle/DarkSwarm/blob/master/assets/architecture-flow.html" target="_blank">
+    <img src="https://img.shields.io/badge/View%20Architecture%20%26%20Metrics-Launch%20Dashboard-00ff88?style=for-the-badge&logo=github" alt="View Architecture Flow">
+  </a>
+</p>
+
+**Includes:**
+
+#### 📊 **Data Flow Infographic**
+Input → ModelRuntime → RoutingStrategy → ConsensusEngine → Storage/Transport → Output
+- Each stage shows its role: validation, routing, inference, consensus, persistence
+- Animated data packets flowing through each stage
+- Hover effects highlight system bottlenecks
+
+#### 🔄 **Problem ↔ Solution Carousel**
+Interactive card-flip comparing centralized AI problems vs DarkSwarm solutions:
+- 🔇 Censorship & Content Filters
+- 💸 API Costs & Rate Limits
+- 👁️ Privacy Violations
+- 🧊 Model Stagnation
+- 🛑 Centralized Shutdown Risk
+
+Auto-rotates every 8 seconds. Click dots or buttons to manually browse.
+
+#### 📈 **Live Metrics Dashboard**
+Real-time stats with pulsing animations:
+- **Active Nodes** — nodes contributing compute
+- **Tasks Processed** — total queries handled
+- **GPU Hours Contributed** — collective compute power
+- **Bytes Routed** — P2P mesh throughput
+
+Stats update every 5 seconds with realistic mock data.
 
 ---
 
@@ -148,6 +188,7 @@ DarkSwarm/
 ├── assets/                  ← Interactive visualizations
 │   ├── network-visualization.html  ← Network topology (animated)
 │   ├── consensus-tiers.html        ← Consensus flow diagram
+│   ├── architecture-flow.html       ← Architecture, carousel, metrics
 │   └── terminal-demo.svg
 ├── interfaces/              ← 6 plugin interfaces
 │   ├── model_runtime.py
